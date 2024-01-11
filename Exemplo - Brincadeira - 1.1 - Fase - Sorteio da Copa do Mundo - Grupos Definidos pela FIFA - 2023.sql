@@ -108,12 +108,6 @@ Values ('Nova Zelândia',1,'II'), ('Austrália',1,'II'),('Japão',1,'AA'),('Ingl
             ('Filipinas',4,'AA'), ('Irlanda',4,'EU'),('Costa Rica',4,'AC'),('Haiti',4,'AC'),('Vietnam',4,'AA'),('Panamá',4,'AC'),('Argentina',4,'AS'),('Coréia do Sul',4,'AA')
 Go
 	
--- Inserindo as Seleções nos Grupos definidos no Sorteio da Fifa --
-Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
-Select 1, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('Nova Zelândia','Suíça','Noruega','Filipinas')
-Go
-
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 2, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
 Where NomeSelecao In ('Austrália','Nigéria','Canadá','Irlanda')

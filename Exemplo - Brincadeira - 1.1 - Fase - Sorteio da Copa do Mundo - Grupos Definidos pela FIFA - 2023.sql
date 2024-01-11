@@ -99,6 +99,14 @@ Go
 -- Inserindo os 4 Potes --
 Insert Into Potes Default Values
 Go 4
+
+-- Inserindo as 32 Selecoes --
+Insert Into Selecoes (NomeSelecao, CodigoPote, SiglaContinente)
+Values ('Nova Zelândia',1,'II'), ('Austrália',1,'II'),('Japão',1,'AA'),('Inglaterra',1,'EU'),('Estados Unidos',1,'AC'),('França',1,'EU'),('Suécia',1,'EU'),('Alemanha',1,'EU'),
+            ('Noruega',2,'EU'), ('Nigéria',2,'AF'),('Espanha',2,'EU'),('Dinamarca',2,'EU'),('Holanda',2,'EU'),('Brasil',2,'AS'),('África do Sul',2,'AF'),('Marrocos',2,'AF'),
+            ('Suíça',3,'EU'), ('Canadá',3,'AC'),('Zambia',3,'AF'),('China',3,'AA'),('Portugal',3,'EU'),('Jamaica',3,'AC'),('Itália',3,'EU'),('Colombia',3,'AS'),
+            ('Filipinas',4,'AA'), ('Irlanda',4,'EU'),('Costa Rica',4,'AC'),('Haiti',4,'AC'),('Vietnam',4,'AA'),('Panamá',4,'AC'),('Argentina',4,'AS'),('Coréia do Sul',4,'AA')
+Go
 	
 -- Inserindo as Seleções nos Grupos definidos no Sorteio da Fifa --
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)

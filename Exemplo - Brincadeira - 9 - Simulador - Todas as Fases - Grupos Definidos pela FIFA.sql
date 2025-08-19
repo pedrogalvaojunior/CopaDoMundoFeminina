@@ -45,51 +45,51 @@ Go 4
 
 -- Inserindo as 32 Selecoes --
 Insert Into Selecoes (NomeSelecao, CodigoPote, SiglaContinente)
-Values ('Qatar',1,'AF'), ('Brasil',1,'AS'),('Bélgica',1,'EU'),('França',1,'EU'),('Argentina',1,'AS'),('Inglaterra',1,'EU'),('Espanha',1,'EU'),('Portugal',1,'EU'),
-            ('México',2,'AC'), ('Holanda',2,'EU'),('Dinamarca',2,'EU'),('Alemanha',2,'EU'),('Uruguai',2,'AS'),('Suíça',2,'EU'),('Estados Unidos',2,'AC'),('Croácia',2,'EU'),
-            ('Senegal',3,'AF'), ('Irã',3,'AA'),('Japão',3,'AA'),('Marrocos',3,'AF'),('Sérvia',3,'EU'),('Polônia',3,'EU'),('Coreia do Sul',3,'AA'),('Tunísia',3,'AF'),
-            ('Camarões',4,'AF'), ('Canadá',4,'AC'),('Equador',4,'AS'),('Arábia Saudita',4,'AA'),('Gana',4,'AF'),('Austrália',4,'II'),('Costa Rica',4,'II'),('País de Gales',4,'EU')
+Values ('Austrália',1,'OC'), ('Nova Zelândia',1,'OC'),('Estados Unidos',1,'AC'),('Suécia',1,'EU'),('Alemanha',1,'EU'),('Inglaterra',1,'EU'),('França',1,'EU'),('Espanha',1,'EU'),
+       ('Canadá',2,'AC'), ('Holanda',2,'EU'),('Brasil',2,'AS'),('Japão',2,'AA'),('Noruega',2,'EU'),('Itália',2,'AS'),('China',2,'AA'),('Coreia do Sul',2,'AA'),
+       ('Dinamarca',3,'EU'), ('Suíça',3,'EU'),('Irlanda',3,'EU'),('Colômbia',3,'AS'),('Argentina',3,'AS'),('Vietnã',3,'AA'),('Costa Rica',3,'AC'),('Jamaica',3,'AC'),
+       ('Nigéria',4,'AF'), ('Filipinas',4,'AA'),('África do Sul',4,'AF'),('Marrocos',4,'AF'),('Zâmbia',4,'AF'),('Haiti',4,'AC'),('Panamá',4,'AF'),('Portugal',4,'EU')
 Go
 
 -- Inserindo as Seleções nos Grupos definidos no Sorteio da Fifa --
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 1, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('Qatar','Equador','Senegal','Holanda')
+Where NomeSelecao In ('Filipinas','Nova Zelândia','Noruega','Suíça')
 Go
 
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 2, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('Inglaterra','Irã','Estados Unidos','País de Gales')
+Where NomeSelecao In ('Austrália','Canadá','Irlanda','Nigéria')
 Go
 
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 3, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('Argentina','Arábia Saudita','México','Polônia')
+Where NomeSelecao In ('Costa Rica','Espanha','Japão','Zâmbia')
 Go
 
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 4, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('França','Austrália','Dinamarca','Tunísia')
+Where NomeSelecao In ('China','Dinamarca','Haiti','Inglaterra')
 Go
 
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 5, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('Espanha','Costa Rica','Alemanha','Japão')
+Where NomeSelecao In ('Estados Unidos','Holanda','Portugal','Vietnã')
 Go
 
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 6, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('Bélgica','Canadá','Marrocos','Croácia')
+Where NomeSelecao In ('Brasil','França','Jamaica','Panamá')
 Go
 
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 7, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('Brasil','Sérvia','Suíça','Camarões')
+Where NomeSelecao In ('África do Sul','Argentina','Itália','Suécia')
 Go
 
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 8, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('Portugal','Gana','Uruguai','Coreia do Sul')
+Where NomeSelecao In ('Alemanha','Colômbia','Coreia do Sul','Marrocos')
 Go
 
 Select Replicate('>>>',4) As 'Em execução - Definição dos Grupos - Sorteio da Fifa'

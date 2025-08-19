@@ -45,10 +45,10 @@ Go 4
 
 -- Inserindo as 32 Selecoes --
 Insert Into Selecoes (NomeSelecao, CodigoPote, SiglaContinente)
-Values ('Qatar',1,'AF'), ('Brasil',1,'AS'),('Bélgica',1,'EU'),('França',1,'EU'),('Argentina',1,'AS'),('Inglaterra',1,'EU'),('Espanha',1,'EU'),('Portugal',1,'EU'),
-            ('México',2,'AC'), ('Holanda',2,'EU'),('Dinamarca',2,'EU'),('Alemanha',2,'EU'),('Uruguai',2,'AS'),('Suíça',2,'EU'),('Estados Unidos',2,'AC'),('Croácia',2,'EU'),
-            ('Senegal',3,'AF'), ('Irã',3,'AA'),('Japão',3,'AA'),('Marrocos',3,'AF'),('Sérvia',3,'EU'),('Polônia',3,'EU'),('Coreia do Sul',3,'AA'),('Tunísia',3,'AF'),
-            ('Camarões',4,'AF'), ('Canadá',4,'AC'),('Equador',4,'AS'),('Arábia Saudita',4,'AA'),('Gana',4,'AF'),('Austrália',4,'II'),('Costa Rica',4,'II'),('País de Gales',4,'EU')
+Values ('Nova Zelândia',1,'II'), ('Austrália',1,'II'),('Japão',1,'AA'),('Inglaterra',1,'EU'),('Estados Unidos',1,'AC'),('França',1,'EU'),('Suécia',1,'EU'),('Alemanha',1,'EU'),
+            ('Noruega',2,'EU'), ('Nigéria',2,'AF'),('Espanha',2,'EU'),('Dinamarca',2,'EU'),('Holanda',2,'EU'),('Brasil',2,'AS'),('África do Sul',2,'AF'),('Marrocos',2,'AF'),
+            ('Suíça',3,'EU'), ('Canadá',3,'AC'),('Zambia',3,'AF'),('China',3,'AA'),('Portugal',3,'EU'),('Jamaica',3,'AC'),('Itália',3,'EU'),('Colombia',3,'AS'),
+            ('Filipinas',4,'AA'), ('Irlanda',4,'EU'),('Costa Rica',4,'AC'),('Haiti',4,'AC'),('Vietnam',4,'AA'),('Panamá',4,'AC'),('Argentina',4,'AS'),('Coréia do Sul',4,'AA')
 Go
 
 Select Replicate('>>>',4) As 'Em execução - Sorteio dos Grupos'

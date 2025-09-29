@@ -1,6 +1,6 @@
 Para realizar a execução de forma correta, basta seguir a ordem de numeração apresentada no nome dos arquivos.
 
-Você poderá realizar o sorteio de forma aleatória, no qual tanto os grupos como as seleções serão distribuídas de acordo com a ordem definida pelo SQL Server através do arquivo 1, ou escolher o sorteio dirigido o qual foi realizado pela Fifa executando o arquivo 1.1
+Você poderá realizar o sorteio de forma aleatória, no qual tanto os grupos como as seleções serão distribuídas de acordo com a ordem definida pelo SQL Server através do arquivo 1, ou escolher o sorteio dirigido o qual foi realizado pela Fifa no dia 01/04 executando o arquivo 1.1
 
 Se você criou os grupos de forma aleatória, para realizar a simulação com sucesso execute o arquivo 9, caso contrário execute o arquivo 10.
 
@@ -62,7 +62,21 @@ Os arquivos 11 e 12 tem como objetivo apresentar o histórico de desempenho de f
 
 2 - Acréscimo do arquivo 8.3.
 
--- Versão 4.1 - Atualização entre 09/11/23 e 10/11/23 --
-Correção aplicada ao arquivo - 3 - Fase - Oitavas de Finais - Definição das 16 Seleções Classificadas.
+-- Versão 4.1 - Atualização entre 09/11/23 e 10/11/23 -- 
+1 - Correção aplicada ao arquivo - 3 - Fase - Oitavas de Finais - Definição das 16 Seleções Classificadas.
 
 Caso o usuário fosse realizar a execução passo a passo, as 16 Seleções definidas para a fase de oitavas de finais não seriam apresentadas.
+
+-- Versão 4.2 - Atualização entre 09/01/24 e 11/01/24 -- 
+1 - Correção aplicada nos arquivos 1.0 e 2.0 - Relacionados ao seu das seleções de acordo com as definições da Fifa.
+
+-- Versão 4.3 - Atualização entre 27/09/25 e 29/09/25 -- 
+1 - Acréscimo da coluna ProrrogacaoOuPenaltys para controle dos empates ocorridos a partir da Oitavas de final.
+
+2 - Validação condicional da ocorrência de prorrogação ou penaltys, aplicando um fator de controle para simular a prorrogação ou penalty, armazenado na tabela de jogos o status, e permitindo exibir qual seleção venceu na prorrogação ou penalty.
+
+3 - Melhorias nas forma de apresentação da Seleção Campeão do Mundo e Vice.
+
+4 - Correção nas análise condições para as fases de quartas de final e semi-final.
+
+5 - Diminuição do tempo médio de processamento para menos de 0.05 e 0.07 segundos.

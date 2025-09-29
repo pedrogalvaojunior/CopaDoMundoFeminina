@@ -45,51 +45,51 @@ Go 4
 
 -- Inserindo as 32 Selecoes --
 Insert Into Selecoes (NomeSelecao, CodigoPote, SiglaContinente)
-Values ('Austrália',1,'OC'), ('Nova Zelândia',1,'OC'),('Estados Unidos',1,'AC'),('Suécia',1,'EU'),('Alemanha',1,'EU'),('Inglaterra',1,'EU'),('França',1,'EU'),('Espanha',1,'EU'),
-       ('Canadá',2,'AC'), ('Holanda',2,'EU'),('Brasil',2,'AS'),('Japão',2,'AA'),('Noruega',2,'EU'),('Itália',2,'AS'),('China',2,'AA'),('Coreia do Sul',2,'AA'),
-       ('Dinamarca',3,'EU'), ('Suíça',3,'EU'),('Irlanda',3,'EU'),('Colômbia',3,'AS'),('Argentina',3,'AS'),('Vietnã',3,'AA'),('Costa Rica',3,'AC'),('Jamaica',3,'AC'),
-       ('Nigéria',4,'AF'), ('Filipinas',4,'AA'),('África do Sul',4,'AF'),('Marrocos',4,'AF'),('Zâmbia',4,'AF'),('Haiti',4,'AC'),('Panamá',4,'AF'),('Portugal',4,'EU')
+Values ('Qatar',1,'AF'), ('Brasil',1,'AS'),('Bélgica',1,'EU'),('França',1,'EU'),('Argentina',1,'AS'),('Inglaterra',1,'EU'),('Espanha',1,'EU'),('Portugal',1,'EU'),
+            ('México',2,'AC'), ('Holanda',2,'EU'),('Dinamarca',2,'EU'),('Alemanha',2,'EU'),('Uruguai',2,'AS'),('Suíça',2,'EU'),('Estados Unidos',2,'AC'),('Croácia',2,'EU'),
+            ('Senegal',3,'AF'), ('Irã',3,'AA'),('Japão',3,'AA'),('Marrocos',3,'AF'),('Sérvia',3,'EU'),('Polônia',3,'EU'),('Coreia do Sul',3,'AA'),('Tunísia',3,'AF'),
+            ('Camarões',4,'AF'), ('Canadá',4,'AC'),('Equador',4,'AS'),('Arábia Saudita',4,'AA'),('Gana',4,'AF'),('Austrália',4,'II'),('Costa Rica',4,'II'),('País de Gales',4,'EU')
 Go
 
 -- Inserindo as Seleções nos Grupos definidos no Sorteio da Fifa --
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 1, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('Filipinas','Nova Zelândia','Noruega','Suíça')
+Where NomeSelecao In ('Qatar','Equador','Senegal','Holanda')
 Go
 
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 2, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('Austrália','Canadá','Irlanda','Nigéria')
+Where NomeSelecao In ('Inglaterra','Irã','Estados Unidos','País de Gales')
 Go
 
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 3, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('Costa Rica','Espanha','Japão','Zâmbia')
+Where NomeSelecao In ('Argentina','Arábia Saudita','México','Polônia')
 Go
 
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 4, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('China','Dinamarca','Haiti','Inglaterra')
+Where NomeSelecao In ('França','Austrália','Dinamarca','Tunísia')
 Go
 
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 5, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('Estados Unidos','Holanda','Portugal','Vietnã')
+Where NomeSelecao In ('Espanha','Costa Rica','Alemanha','Japão')
 Go
 
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 6, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('Brasil','França','Jamaica','Panamá')
+Where NomeSelecao In ('Bélgica','Canadá','Marrocos','Croácia')
 Go
 
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 7, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('África do Sul','Argentina','Itália','Suécia')
+Where NomeSelecao In ('Brasil','Sérvia','Suíça','Camarões')
 Go
 
 Insert Into Sorteios (CodigoGrupo, CodigoSelecao, PosicaoGrupo, SiglaContinente)
 Select 8, CodigoSelecao, CodigoPote, SiglaContinente From Selecoes
-Where NomeSelecao In ('Alemanha','Colômbia','Coreia do Sul','Marrocos')
+Where NomeSelecao In ('Portugal','Gana','Uruguai','Coreia do Sul')
 Go
 
 Select Replicate('>>>',4) As 'Em execução - Definição dos Grupos - Sorteio da Fifa'
@@ -409,25 +409,39 @@ Begin
                        On J.CodigoSelecao2 = S2.CodigoSelecao
  Where J.CodigoJogo In (Select CodigoJogo From Jogos Where CodigoJogo Between 49 And 56 And GolsSelecao1 = GolsSelecao2)
 
- Select 'Prorrogação ou Penaltys foram realizados.' As 'Oitavas de Final'
+ Select 'Prorrogação ou Penaltys serão realizados.' As 'Oitavas de Final'
  
- Declare @GolsSelecao1 TinyInt, @GolsSelecao2 TinyInt
+ Declare @GolsSelecao1 TinyInt, @GolsSelecao2 TinyInt, @StatusProrrogacaoOuPenaltys Char(2)
 
-  Set @GolsSelecao1 = 1
-  Set @GolsSelecao2 = 1
+ Set @GolsSelecao1=1
+ Set @GolsSelecao2=1
 
-  While @GolsSelecao1 = @GolsSelecao2
+ While @GolsSelecao1 = @GolsSelecao2
   Begin
   
    Set @GolsSelecao1 = Rand()*Rand()*8
    Set @GolsSelecao2 = Rand()*Rand()*8
 
+   If (Select Round(Convert(Float,Rand()),2)) <0.6
+    Begin
+     Select 'A prorrogação está sendo realizada.' As 'Oitavas de Final - Prorrogação'
+     
+     Set @StatusProrrogacaoOuPenaltys = 'PR'
+    End
+   Else
+    Begin
+     Select 'Os penaltys estão sendo realizados.' As 'Oitavas de Final - Penaltys'
+
+     Set @StatusProrrogacaoOuPenaltys = 'PE'
+    End
+
    If @GolsSelecao1 <> @GolsSelecao2
     Begin
      Update Jogos
-     Set GolsSelecao1 = @GolsSelecao1,
-           GolsSelecao2 = @GolsSelecao2
-     From Jogos
+     Set GolsSelecao1 = J.GolsSelecao1+@GolsSelecao1,
+           GolsSelecao2 = J.GolsSelecao2+@GolsSelecao2,
+           ProrrogacaoOuPenaltys = @StatusProrrogacaoOuPenaltys
+     From Jogos J
      Where CodigoJogo In (Select CodigoJogo From Jogos Where CodigoJogo Between 49 And 56 And GolsSelecao1 = GolsSelecao2)
  
      Break
@@ -443,8 +457,8 @@ Go
 Select Concat('Jogo nº ',J.CodigoJogo,' - ', S1.NomeSelecao,' x ',S2.NomeSelecao) As 'Oitavas de Final',
            Concat(S1.NomeSelecao,' ',J.GolsSelecao1,' x ',J.GolsSelecao2, ' ',S2.NomeSelecao) As Placar,
 		   Case 
-		    When J.GolsSelecao1 > J.GolsSelecao2 Then Concat(S1.NomeSelecao,' Venceu')
-		    When J.GolsSelecao2 > J.GolsSelecao1 Then Concat(S2.NomeSelecao,' Venceu')
+		    When J.GolsSelecao1 > J.GolsSelecao2 Then Concat(S1.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then  'Venceu' When 'PE' Then ' Venceu nos Penaltys' Else ' Venceu na Prorrogação' End)
+		    When J.GolsSelecao2 > J.GolsSelecao1 Then Concat(S2.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then ' Venceu' When 'PE' Then ' Venceu nos Penaltys' Else ' Venceu na Prorrogação' End)
            End As 'Vencedor'
 From Jogos J Inner Join Grupos G
                       On J.CodigoGrupoSorteio = G.CodigoGrupo
@@ -494,8 +508,8 @@ Declare @CodigoQuartasDeFinal1 TinyInt, @CodigoQuartasDeFinal2 TinyInt, @CodigoS
 Set @CodigoQuartasDeFinal1 = 1
 Set @CodigoQuartasDeFinal2 = 2
 
-Set @CodigoSelecao1 = 1
-Set @CodigoSelecao2 = 1
+Set @CodigoSelecao1=1
+Set @CodigoSelecao2=1
 
 While @CodigoQuartasDeFinal1 <=7
  Begin
@@ -531,25 +545,39 @@ Begin
                        On J.CodigoSelecao2 = S2.CodigoSelecao
  Where J.CodigoJogo In (Select CodigoJogo From Jogos Where CodigoJogo Between 57 And 60 And GolsSelecao1 = GolsSelecao2)
 
- Select 'Prorrogação ou Penaltys foram realizados.' As 'Quartas de Final'
+ Select 'Prorrogação ou Penaltys serão realizados.' As 'Quartas de Final'
 
-  Declare @GolsSelecao1 TinyInt, @GolsSelecao2 TinyInt
+ Declare @GolsSelecao1 TinyInt, @GolsSelecao2 TinyInt, @StatusProrrogacaoOuPenaltys Char(2)
 
-  Set @GolsSelecao1 = 1
-  Set @GolsSelecao2 = 1
+ Set @GolsSelecao1=1
+ Set @GolsSelecao2=1
 
-  While @GolsSelecao1 = @GolsSelecao2
+ While @GolsSelecao1 = @GolsSelecao2
   Begin
   
    Set @GolsSelecao1 = Rand()*Rand()*8
    Set @GolsSelecao2 = Rand()*Rand()*8
 
+   If (Select Round(Convert(Float,Rand()),2)) <0.6
+    Begin
+     Select 'A prorrogação está sendo realizada.' As 'Quartas de Final - Prorrogação'
+     
+     Set @StatusProrrogacaoOuPenaltys = 'PR'
+    End
+   Else
+    Begin
+     Select 'Os penaltys estão sendo realizados.' As 'Quartas de Final - Penaltys'
+
+     Set @StatusProrrogacaoOuPenaltys = 'PE'
+    End
+
    If @GolsSelecao1 <> @GolsSelecao2
     Begin
      Update Jogos
-     Set GolsSelecao1 = @GolsSelecao1,
-           GolsSelecao2 = @GolsSelecao2
-     From Jogos
+     Set GolsSelecao1 = J.GolsSelecao1+@GolsSelecao1,
+           GolsSelecao2 = J.GolsSelecao2+@GolsSelecao2,
+           ProrrogacaoOuPenaltys = @StatusProrrogacaoOuPenaltys
+     From Jogos J
      Where CodigoJogo In (Select CodigoJogo From Jogos Where CodigoJogo Between 57 And 60 And GolsSelecao1 = GolsSelecao2)
  
      Break
@@ -565,8 +593,8 @@ Go
 Select Concat('Jogo nº ',J.CodigoJogo,' - ', S1.NomeSelecao,' x ',S2.NomeSelecao) As 'Quartas de Final',
            Concat(S1.NomeSelecao,' ',J.GolsSelecao1,' x ',J.GolsSelecao2, ' ',S2.NomeSelecao) As Placar,
 		   Case 
-		    When J.GolsSelecao1 > J.GolsSelecao2 Then Concat(S1.NomeSelecao,' Venceu')
-		    When J.GolsSelecao2 > J.GolsSelecao1 Then Concat(S2.NomeSelecao,' Venceu')
+		    When J.GolsSelecao1 > J.GolsSelecao2 Then Concat(S1.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then  'Venceu' When 'PE' Then ' Venceu nos Penaltys' Else ' Venceu na Prorrogação' End)
+		    When J.GolsSelecao2 > J.GolsSelecao1 Then Concat(S2.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then ' Venceu' When 'PE' Then ' Venceu nos Penaltys' Else ' Venceu na Prorrogação' End)
            End As 'Vencedor'
 From Jogos J Inner Join Grupos G
                       On J.CodigoGrupoSorteio = G.CodigoGrupo
@@ -613,8 +641,8 @@ Declare @CodigoSemiFinal1 TinyInt, @CodigoSemiFinal2 TinyInt, @CodigoSelecao1 Ti
 Set @CodigoSemiFinal1 = 1
 Set @CodigoSemiFinal2 = 2
 
-Set @CodigoSelecao1 = 1
-Set @CodigoSelecao2 = 1
+Set @CodigoSelecao1=1
+Set @CodigoSelecao2=1
 
 While @CodigoSemiFinal1 <=3
  Begin
@@ -650,25 +678,39 @@ Begin
                        On J.CodigoSelecao2 = S2.CodigoSelecao
  Where J.CodigoJogo In (Select CodigoJogo From Jogos Where CodigoJogo Between 61 And 62 And GolsSelecao1 = GolsSelecao2)
 
- Select 'Prorrogação ou Penaltys foram realizados.' As 'Semi Final'
+ Select 'Prorrogação ou Penaltys serão realizados.' As 'Semi Final'
  
-  Declare @GolsSelecao1 TinyInt, @GolsSelecao2 TinyInt
+  Declare @GolsSelecao1 TinyInt, @GolsSelecao2 TinyInt, @StatusProrrogacaoOuPenaltys Char(2)
 
-  Set @GolsSelecao1 = 1
-  Set @GolsSelecao2 = 1
+  Set @GolsSelecao1=1
+  Set @GolsSelecao2=1
 
-  While @GolsSelecao1 = @GolsSelecao2
+  While @GolsSelecao1 =  @GolsSelecao2
   Begin
   
    Set @GolsSelecao1 = Rand()*Rand()*8
    Set @GolsSelecao2 = Rand()*Rand()*8
 
+   If (Select Round(Convert(Float,Rand()),2)) <0.6
+    Begin
+     Select 'A prorrogação está sendo realizada.' As 'Semi Final - Prorrogação'
+     
+     Set @StatusProrrogacaoOuPenaltys = 'PR'
+    End
+   Else
+    Begin
+     Select 'Os penaltys estão sendo realizados.' As 'Semi Final - Penaltys'
+
+     Set @StatusProrrogacaoOuPenaltys = 'PE'
+    End
+
    If @GolsSelecao1 <> @GolsSelecao2
     Begin
      Update Jogos
-     Set GolsSelecao1 = @GolsSelecao1,
-           GolsSelecao2 = @GolsSelecao2
-     From Jogos
+     Set GolsSelecao1 = J.GolsSelecao1+@GolsSelecao1,
+           GolsSelecao2 = J.GolsSelecao2+@GolsSelecao2,
+           ProrrogacaoOuPenaltys = @StatusProrrogacaoOuPenaltys
+     From Jogos J
      Where CodigoJogo In (Select CodigoJogo From Jogos Where CodigoJogo Between 61 And 62 And GolsSelecao1 = GolsSelecao2)
  
      Break
@@ -684,12 +726,12 @@ Go
 Select Concat('Jogo nº ',J.CodigoJogo,' - ', S1.NomeSelecao,' x ',S2.NomeSelecao) As 'Semi Final',
            Concat(S1.NomeSelecao,' ',J.GolsSelecao1,' x ',J.GolsSelecao2, ' ',S2.NomeSelecao) As Placar,
 		   Case 
-		    When J.GolsSelecao1 > J.GolsSelecao2 Then S1.NomeSelecao
-		    When J.GolsSelecao2 > J.GolsSelecao1 Then S2.NomeSelecao
+		    When J.GolsSelecao1 > J.GolsSelecao2 Then Concat(S1.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then  'Venceu' When 'PE' Then ' Venceu nos Penaltys' Else ' Venceu na Prorrogação' End)
+		    When J.GolsSelecao2 > J.GolsSelecao1 Then Concat(S2.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then ' Venceu' When 'PE' Then ' Venceu nos Penaltys' Else ' Venceu na Prorrogação' End)
            End As 'Disputa Final',
 		   Case 
-		    When J.GolsSelecao1 > J.GolsSelecao2 Then S2.NomeSelecao
-		    When J.GolsSelecao2 > J.GolsSelecao1 Then S1.NomeSelecao
+		    When J.GolsSelecao1 > J.GolsSelecao2 Then Concat(S2.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then  'Perdeu' When 'PE' Then ' Perdeu nos Penaltys' Else ' Perdeu na Prorrogação' End)
+		    When J.GolsSelecao2 > J.GolsSelecao1 Then Concat(S1.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then ' Perdeu' When 'PE' Then ' Perdeu nos Penaltys' Else ' Perdeu na Prorrogação' End)
            End As 'Disputa Terceiro Lugar'
 From Jogos J Inner Join Grupos G
                       On J.CodigoGrupoSorteio = G.CodigoGrupo
@@ -792,26 +834,39 @@ Begin
                        On J.CodigoSelecao2 = S2.CodigoSelecao
  Where J.CodigoJogo = 63
 
- Select 'Prorrogação ou Penaltys foram realizados.' As 'Terceiro Lugar'
+ Select 'Prorrogação ou Penaltys serão realizados.' As 'Terceiro Lugar'
 
- Declare @GolsSelecao1 TinyInt, @GolsSelecao2 TinyInt
+ Declare @GolsSelecao1 TinyInt, @GolsSelecao2 TinyInt, @StatusProrrogacaoOuPenaltys Char(2)
 
- Set @GolsSelecao1 = 1
- Set @GolsSelecao2 = 1
+ Set @GolsSelecao1=1
+ Set @GolsSelecao2=1
 
- While @GolsSelecao1 = @GolsSelecao2
+ While @GolsSelecao1 =  @GolsSelecao2
   Begin
   
    Set @GolsSelecao1 = Rand()*Rand()*8
    Set @GolsSelecao2 = Rand()*Rand()*8
 
+   If (Select Round(Convert(Float,Rand()),2)) <0.6
+    Begin
+     Select 'A prorrogação está sendo realizada.' As 'Terceiro Lugar - Prorrogação'
+     
+     Set @StatusProrrogacaoOuPenaltys = 'PR'
+    End
+   Else
+    Begin
+     Select 'Os penaltys estão sendo realizados.' As 'Terceiro Lugar - Penaltys'
+
+     Set @StatusProrrogacaoOuPenaltys = 'PE'
+    End
+
    If @GolsSelecao1 <> @GolsSelecao2
     Begin
-
      Update Jogos
-     Set GolsSelecao1 = @GolsSelecao1,
-           GolsSelecao2 = @GolsSelecao2
-     From Jogos
+     Set GolsSelecao1 = J.GolsSelecao1+@GolsSelecao1,
+           GolsSelecao2 = J.GolsSelecao2+@GolsSelecao2,
+           ProrrogacaoOuPenaltys = @StatusProrrogacaoOuPenaltys
+     From Jogos J
      Where CodigoJogo = 63
  
      Break
@@ -826,8 +881,10 @@ Go
 -- Consultando o resultado do Jogo - Disputa do Terceiro Lugar --
 Select Concat('Jogo nº ',J.CodigoJogo,' - ', S1.NomeSelecao,' x ',S2.NomeSelecao) As 'Terceiro e Quarto',
            Concat(S1.NomeSelecao,' ',J.GolsSelecao1,' x ',J.GolsSelecao2, ' ',S2.NomeSelecao) As Placar,
-		   Case When J.GolsSelecao1 > J.GolsSelecao2 Then Concat(S1.NomeSelecao,' Venceu!') Else Concat(S2.NomeSelecao,' Venceu!') End As 'Terceiro lugar',
-		   Case When J.GolsSelecao2 > J.GolsSelecao1 Then Concat(S1.NomeSelecao,' Perdeu!') Else Concat(S2.NomeSelecao,' Perdeu!') End As 'Quarto lugar'
+		    Case When J.GolsSelecao1 > J.GolsSelecao2 Then Concat(S1.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then  ' Venceu' When 'PE' Then ' Venceu nos Penaltys' Else ' Venceu na Prorrogação' End) 
+             Else Concat(S2.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then  ' Venceu' When 'PE' Then ' Venceu nos Penaltys' Else ' Venceu na Prorrogação' End) End As 'Terceiro Lugar',
+   		    Case When J.GolsSelecao2 > J.GolsSelecao1 Then Concat(S1.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then  ' Perdeu' When 'PE' Then ' Perdeu nos Penaltys' Else ' Perdeu na Prorrogação' End) 
+             Else Concat(S2.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then  ' Perdeu' When 'PE' Then ' Perdeu nos Penaltys' Else ' Perdeu na Prorrogação' End) End As 'Quarto Lugar'
 From Jogos J Inner Join Grupos G
                       On J.CodigoGrupoSorteio = G.CodigoGrupo
                      Inner Join Selecoes S1
@@ -873,26 +930,40 @@ Begin
                        On J.CodigoSelecao2 = S2.CodigoSelecao
  Where J.CodigoJogo = 64
 
- Select 'Prorrogação ou Penaltys foram realizados.' As 'Final'
+ Select 'Prorrogação ou Penaltys serão realizados.' As 'Final'
 
-  Declare @GolsSelecao1 TinyInt, @GolsSelecao2 TinyInt
+  Declare @GolsSelecao1 TinyInt, @GolsSelecao2 TinyInt, @StatusProrrogacaoOuPenaltys Char(2)
 
   Set @GolsSelecao1 = 1
   Set @GolsSelecao2 = 1
 
-  While @GolsSelecao1 = @GolsSelecao2
+  While @GolsSelecao1 =  @GolsSelecao2
   Begin
   
    Set @GolsSelecao1 = Rand()*Rand()*8
    Set @GolsSelecao2 = Rand()*Rand()*8
 
+   If (Select Round(Convert(Float,Rand()),2)) <0.6
+    Begin
+     Select 'A prorrogação está sendo realizada.' As 'Final - Prorrogação'
+     
+     Set @StatusProrrogacaoOuPenaltys = 'PR'
+    End
+   Else
+    Begin
+     Select 'Os penaltys estão sendo realizados.' As 'Final - Penaltys'
+
+     Set @StatusProrrogacaoOuPenaltys = 'PE'
+    End
+
    If @GolsSelecao1 <> @GolsSelecao2
     Begin
 
      Update Jogos
-     Set GolsSelecao1 = @GolsSelecao1,
-           GolsSelecao2 = @GolsSelecao2
-     From Jogos
+     Set GolsSelecao1 = J.GolsSelecao1+@GolsSelecao1,
+           GolsSelecao2 = J.GolsSelecao2+@GolsSelecao2,
+           ProrrogacaoOuPenaltys = @StatusProrrogacaoOuPenaltys
+     From Jogos J
      Where CodigoJogo = 64
  
      Break
@@ -907,8 +978,10 @@ Go
 -- Consultando o resultado do Jogo - Final --
 Select Concat('Jogo nº ',J.CodigoJogo,' - ', S1.NomeSelecao,' x ',S2.NomeSelecao) As 'Final',
            Concat(S1.NomeSelecao,' ',J.GolsSelecao1,' x ',J.GolsSelecao2, ' ',S2.NomeSelecao) As Placar,
-		   Case When J.GolsSelecao1 > J.GolsSelecao2 Then Concat(S1.NomeSelecao,' - Fifa World Champions') Else Concat(S2.NomeSelecao,' - Fifa World Champions') End As 'World Champions',
-		   Case When J.GolsSelecao1 > J.GolsSelecao2 Then Concat(S2.NomeSelecao,' - Segundo lugar') Else Concat(S1.NomeSelecao,' - Segundo lugar') End As 'Runner-up'
+		    Case When J.GolsSelecao1 > J.GolsSelecao2 Then Concat(S1.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then '' When 'PE' Then ' Venceu nos Penaltys' Else ' Venceu na Prorrogação' End) 
+             Else Concat(S2.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then '' When 'PE' Then ' Venceu nos Penaltys' Else ' Venceu na Prorrogação' End) End As 'Fifa World Champions',
+   		    Case When J.GolsSelecao2 > J.GolsSelecao1 Then Concat(S1.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then '' When 'PE' Then ' Perdeu nos Penaltys' Else ' Perdeu na Prorrogação' End) 
+             Else Concat(S2.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then '' When 'PE' Then ' Perdeu nos Penaltys' Else ' Perdeu na Prorrogação' End) End As 'Runner-up'	   
 From Jogos J Inner Join Grupos G
                       On J.CodigoGrupoSorteio = G.CodigoGrupo
                      Inner Join Selecoes S1

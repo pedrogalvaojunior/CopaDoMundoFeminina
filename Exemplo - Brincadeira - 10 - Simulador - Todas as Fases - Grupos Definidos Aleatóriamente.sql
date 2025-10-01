@@ -433,6 +433,7 @@ Begin
                        On J.CodigoSelecao2 = S2.CodigoSelecao
  Where J.CodigoJogo In (Select CodigoJogo From Jogos Where CodigoJogo Between 49 And 56 And GolsSelecao1 = GolsSelecao2)
 
+ -- Declarando a Variável do Tipo Tabela @JogosComEmpates para armazenar o código dos jogos empatados --
  Declare @JogosComEmpates Table
   (CodigoJogo TinyInt Primary Key)
 
@@ -441,7 +442,7 @@ Begin
 
   Select 'Prorrogação ou Penaltys serão realizados.' As 'Oitavas de Final'
  
-  Declare @GolsSelecao1 TinyInt, @GolsSelecao2 TinyInt, @StatusProrrogacaoOuPenaltys Char(2)
+ Declare @GolsSelecao1 TinyInt, @GolsSelecao2 TinyInt, @StatusProrrogacaoOuPenaltys Char(2)
 
   Set @GolsSelecao1=1
   Set @GolsSelecao2=1
@@ -580,6 +581,7 @@ Begin
                        On J.CodigoSelecao2 = S2.CodigoSelecao
  Where J.CodigoJogo In (Select CodigoJogo From Jogos Where CodigoJogo Between 57 And 60 And GolsSelecao1 = GolsSelecao2)
 
+ -- Declarando a Variável do Tipo Tabela @JogosComEmpates para armazenar o código dos jogos empatados --
  Declare @JogosComEmpates Table
  (CodigoJogo TinyInt Primary Key)
 
@@ -724,6 +726,7 @@ Begin
                        On J.CodigoSelecao2 = S2.CodigoSelecao
  Where J.CodigoJogo In (Select CodigoJogo From Jogos Where CodigoJogo Between 61 And 62 And GolsSelecao1 = GolsSelecao2)
 
+ -- Declarando a Variável do Tipo Tabela @JogosComEmpates para armazenar o código dos jogos empatados --
  Declare @JogosComEmpates Table
  (CodigoJogo TinyInt Primary Key)
 

@@ -3,6 +3,7 @@ Simulador da Copa do Mundo de Futebol Feminino da Fifa 2023
 
 Esta versão do Simulador da Copa do Mundo de Futebol Feminino da Fifa, foi elaborado com base no mesmo código fonte utilizado para a versão da Copa de 2022, o qual apresenta as seguintes funcionalidades:
 
+
 **Versão 1.0 -- Desenvolvimento entre 01/04/22 e 15/04/22**
 
 1 - Simulação do 48 jogos da fase de grupos;

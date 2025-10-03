@@ -2,265 +2,176 @@
 Use Australia2023
 Go
 
--- Criando a Tabela ClassificacaoGeral --
-Create Table ClassificacaoGeral
- (CodigoClassificacaoGeral TinyInt Identity(1,1) Primary Key Clustered,
-  PosicaoClassificacaoGeral TinyInt Default 0,
-  CodigoSelecao TinyInt Not Null,
-  Jogos TinyInt Default 0,
-  Pontos TinyInt Default 0,
-  Vitorias TinyInt Default 0,
-  Empates TinyInt Default 0,
-  Derrotas TinyInt Default 0,
-  CartoesAmarelos TinyInt Default 0,
-  CartoesVermelhos TinyInt Default 0,
-  GolsPro Int Default 0,
-  GolsContra Int Default 0,
-  SaldoGols As (GolsPro - GolsContra))
+-- Consultando --
+Select 'Terceiro e Quarto' As Fase, 
+          (Select S.NomeSelecao As 'Seleção' 
+		   From ClassificadosTerceiroLugar Q Inner Join Selecoes S On Q.CodigoSelecaoSorteio = S.CodigoSelecao
+           Where CodigoTerceiroLugar = 1) + ' x '+
+          (Select S.NomeSelecao As 'Seleção' 
+		   From ClassificadosTerceiroLugar Q Inner Join Selecoes S On Q.CodigoSelecaoSorteio = S.CodigoSelecao
+           Where CodigoTerceiroLugar = 2) As 'Seleções'
 Go
 
--- Implementando a Classificacação Geral após o encerramento da Copa do Mundo --
-Create Or Alter Procedure P_ClassificacaoGeral
-As
-Begin
+Select 'Final' As Fase, 
+          (Select S.NomeSelecao As 'Seleção' 
+		   From ClassificadosFinal Q Inner Join Selecoes S On Q.CodigoSelecaoSorteio = S.CodigoSelecao
+           Where CodigoFinal = 1) + ' x '+
+          (Select S.NomeSelecao As 'Seleção' 
+		   From ClassificadosFinal Q Inner Join Selecoes S On Q.CodigoSelecaoSorteio = S.CodigoSelecao
+           Where CodigoFinal = 2) As 'Seleções'
+Go
 
--- Removendo as classificações anteriores --
-Truncate Table ClassificacaoGeral
+-- Criando o Jogo da Disputa do Terceiro Lugar --
+Declare @CodigoSelecao1 TinyInt, @CodigoSelecao2 TinyInt
 
--- Desativando a Contagem de Linhas --
-Set NoCount On
-
--- Inserindo as 32 Selecoes na ClassificacaoGeral --
-Insert Into ClassificacaoGeral (CodigoSelecao)
-Select CodigoSelecao From Selecoes
-
--- Identificando a Quantidade de Jogos, GolsPro, GolsContra, Cartoões Amarelos e Vermelhos --
-Declare @CodigoSelecao TinyInt
-
-Set @CodigoSelecao = 1
-
-While @CodigoSelecao <=32
-Begin
-
- ;With CTEResumoJogos (CodigoSelecao, Jogos, Gols, GolsContra, Amarelos, Vermelhos)
- As
-
- (Select CodigoSelecao1, Count(CodigoJogo) As Jogos, Sum(GolsSelecao1) As GolsPro, Sum(GolsSelecao2) As GolsContra,              
-             Sum(CartoesAmareloSelecao1) As Amarelos, Sum(CartoesVermelhoSelecao1) As Vermelhos
- From Jogos
- Where CodigoSelecao1=@CodigoSelecao
- Group By CodigoSelecao1
-
- Union
-
- Select CodigoSelecao2, Count(CodigoJogo) As Jogos, Sum(GolsSelecao2) As GolsPro, Sum(GolsSelecao1) As GolsContra,   
-            Sum(CartoesAmareloSelecao2) As Amarelos, Sum(CartoesVermelhoSelecao2) As Vermelhos
- From Jogos
- Where CodigoSelecao2=@CodigoSelecao
- Group By CodigoSelecao2)
-
- Update ClassificacaoGeral
- Set Jogos = CR.Jogos,
-       GolsPro = CR.GolsPro,
-	   GolsContra = CR.GolsContra,
-       CartoesAmarelos = CR.Amarelos,
-	   CartoesVermelhos = CR.Vermelhos
- From ClassificacaoGeral C Cross Apply (Select CodigoSelecao, Sum(Jogos) As Jogos, Sum(Gols) As GolsPro, Sum(GolsContra) As GolsContra,
-                                                                             Sum(Amarelos) As Amarelos, Sum(Vermelhos) As Vermelhos
-																  From CTEResumoJogos
-																  Where CodigoSelecao = C.CodigoSelecao
-																  Group By CodigoSelecao) As CR (CodigoSelecao, Jogos, GolsPro, GolsContra, Amarelos, Vermelhos)
-
- Where C.CodigoSelecao = @CodigoSelecao
-
- Set @CodigoSelecao = @CodigoSelecao + 1
-End
-
--- Identificando a Quantidade de Vitorias, Empates, Derrotas e Pontos --
-Set @CodigoSelecao = 1
-
-While @CodigoSelecao <=32
-Begin
-
- ;With CTEResumoVitorasEmpatesDerrotas(CodigoSelecao, Vitorias, Derrotas, Empates)
- As
- (
-  Select CodigoSelecao1,
-             IsNull(Case When GolsSelecao1 > GolsSelecao2 Then 1 End,0) As Vitorias,
-             IsNull(Case When GolsSelecao1 < GolsSelecao2 Then 1 End,0) As Derrotas,
-             IsNull(Case When GolsSelecao1 = GolsSelecao2 Then 1 End,0) As Empates
-  From Jogos
-  Where CodigoSelecao1=@CodigoSelecao
-
-  Union All
-
-  Select CodigoSelecao2,
-             IsNull(Case When GolsSelecao2 > GolsSelecao1 Then 1 End,0) As Vitorias,
-             IsNull(Case When GolsSelecao2 < GolsSelecao1 Then 1 End,0) As Derrotas,
-             IsNull(Case When GolsSelecao2 = GolsSelecao1 Then 1 End,0) As Empates
-  From Jogos
-  Where CodigoSelecao2=@CodigoSelecao
- ),
-  CTEResumoPontuacao (CodigoSelecao, TotalVitorias, TotalDerrotas, TotalEmpates, Pontos)
-  As
-  (
-   Select CodigoSelecao, Sum(Vitorias) As V, Sum(Derrotas) As D, Sum(Empates) As E,
-              Sum(Vitorias)*3+Sum(Empates)*1 As Pontos
-   From CTEResumoVitorasEmpatesDerrotas
-   Where CodigoSelecao = @CodigoSelecao
-   Group By CodigoSelecao
-  )
+Set @CodigoSelecao1 = (Select CodigoSelecaoSorteio From ClassificadosTerceiroLugar Where CodigoTerceiroLugar = 1)
+Set @CodigoSelecao2 = (Select CodigoSelecaoSorteio From ClassificadosTerceiroLugar Where CodigoTerceiroLugar = 2)
   
-  Update ClassificacaoGeral
-  Set Vitorias = CT.TotalVitorias,
-		Derrotas = CT.TotalDerrotas,
-        Empates = CT.TotalEmpates,
-		Pontos = CT.Pontos
-  From ClassificacaoGeral C Inner Join CTEResumoPontuacao CT
-											  On C.CodigoSelecao = CT.CodigoSelecao
-  Where C.CodigoSelecao = @CodigoSelecao
+Insert Into Jogos (CodigoGrupoSorteio, CodigoSelecao1, CodigoSelecao2, CodigoJogoNoGrupo, GolsSelecao1, GolsSelecao2, CartoesAmareloSelecao1, CartoesAmareloSelecao2, CartoesVermelhoSelecao1, CartoesVermelhoSelecao2)
+Values (1,@CodigoSelecao1,@CodigoSelecao2, 1, Rand()*Rand()*8,Rand()*Rand()*8,Rand()*10,Rand()*10,Rand()*4,Rand()*4)
+Go
 
- Set @CodigoSelecao = @CodigoSelecao + 1
-End
+-- Eliminando a ocorrência de possível empate no Jogo da Disputa do Terceiro Lugar --
+If (Select Count(CodigoJogo) From Jogos Where CodigoJogo = 63 And GolsSelecao1 = GolsSelecao2) = 1
+Begin
 
--- Atualizando a Classificação Geral --
-;With CTEPosicaoClassificacaoGeral (Classificacao, CodigoSelecao)
-As
-(
-Select Row_Number() Over (Order By Pontos Desc, Jogos Desc, Vitorias Desc, Empates Desc, Derrotas Desc,
-                                              GolsPro Desc, GolsContra Desc, SaldoGols Desc, 
-											  CartoesAmarelos Desc, CartoesVermelhos Desc) As 'Classificação',
-		  CodigoSelecao
-From ClassificacaoGeral
-)
-Update ClassificacaoGeral
-Set PosicaoClassificacaoGeral = CP.Classificacao
-From ClassificacaoGeral C Inner Join CTEPosicaoClassificacaoGeral CP
-										    On C.CodigoSelecao = CP.CodigoSelecao
+ Select 'Ocorreu empate no jogo' As 'Terceiro Lugar',' ' As 'Placar'
+ Union All
+ Select Concat('Jogo nº ',J.CodigoJogo,' - ', 'Grupo ',G.SiglaGrupo, ' - ', S1.NomeSelecao,' x ',S2.NomeSelecao) As 'Terceiro Lugar',
+            Concat(S1.NomeSelecao,' ',J.GolsSelecao1,' x ',J.GolsSelecao2, ' ',S2.NomeSelecao) As Placar
+ From Jogos J Inner Join Grupos G
+                       On J.CodigoGrupoSorteio = G.CodigoGrupo
+                      Inner Join Selecoes S1
+                       On J.CodigoSelecao1 = S1.CodigoSelecao
+                      Inner Join Selecoes S2
+                       On J.CodigoSelecao2 = S2.CodigoSelecao
+ Where J.CodigoJogo = 63
 
--- Apresentando - Classificação Final - World Champion, Runner-Up, Terceiro e Quarto --
-Select 'Classificação Final - World Champion, Runner-Up, Terceiro e Quarto' As 'Qatar 2022'
-Union All
-Select Case When J.GolsSelecao1 > J.GolsSelecao2 Then '1º lugar: '+S1.NomeSelecao Else '1º lugar: '+S2.NomeSelecao End As 'Classificação'
-From ClassificadosFinal C Inner Join Selecoes S1
-                                           On C.CodigoSelecaoSorteio = S1.CodigoSelecao
-										  Inner Join Jogos J
-										   On J.CodigoSelecao1 = S1.CodigoSelecao
-										  Inner Join Selecoes S2
-										   On S2.CodigoSelecao = J.CodigoSelecao2
-Where J.CodigoJogo = 64
+ Select 'Prorrogação ou Penaltys serão realizados.' As 'Terceiro Lugar'
 
-Union All
+ Declare @GolsSelecao1 TinyInt, @GolsSelecao2 TinyInt, @StatusProrrogacaoOuPenaltys Char(2)
 
-Select Case When J.GolsSelecao1 < J.GolsSelecao2 Then '2º lugar: '+S1.NomeSelecao Else '2º lugar: '+S2.NomeSelecao End As 'Classificação'
-From ClassificadosFinal C Inner Join Selecoes S1
-                                           On C.CodigoSelecaoSorteio = S1.CodigoSelecao
-										  Inner Join Jogos J
-										   On J.CodigoSelecao1 = S1.CodigoSelecao
-										  Inner Join Selecoes S2
-										   On S2.CodigoSelecao = J.CodigoSelecao2
-Where J.CodigoJogo = 64
+ Set @GolsSelecao1 = Rand()*Rand()*8
+ Set @GolsSelecao2 = Rand()*Rand()*8
 
-Union All
+   If (Select Round(Convert(Float,Rand()),2)) <0.6
+    Begin
+     Select 'A prorrogação está sendo realizada.' As 'Terceiro Lugar - Prorrogação'
+     
+     Set @StatusProrrogacaoOuPenaltys = 'PR'
+    End
+   Else
+    Begin
+     Select 'Os penaltys estão sendo realizados.' As 'Terceiro Lugar - Penaltys'
 
-Select Case When J.GolsSelecao1 > J.GolsSelecao2 Then '3º lugar: '+S1.NomeSelecao Else '3º lugar: '+S2.NomeSelecao End As 'Classificação'
-From ClassificadosTerceiroLugar C Inner Join Selecoes S1
-                                           On C.CodigoSelecaoSorteio = S1.CodigoSelecao
-										  Inner Join Jogos J
-										   On J.CodigoSelecao1 = S1.CodigoSelecao
-										  Inner Join Selecoes S2
-										   On S2.CodigoSelecao = J.CodigoSelecao2
+     Set @StatusProrrogacaoOuPenaltys = 'PE'
+    End
+
+   If @GolsSelecao1 <> @GolsSelecao2
+    Begin
+     Update Jogos
+     Set GolsSelecao1 = J.GolsSelecao1+@GolsSelecao1,
+           GolsSelecao2 = J.GolsSelecao2+@GolsSelecao2,
+           ProrrogacaoOuPenaltys = @StatusProrrogacaoOuPenaltys
+     From Jogos J
+     Where CodigoJogo = 63
+ 
+  End
+ End
+Go
+
+-- Consultando o resultado do Jogo - Disputa do Terceiro Lugar --
+Select Concat('Jogo nº ',J.CodigoJogo,' - ', S1.NomeSelecao,' x ',S2.NomeSelecao) As 'Terceiro e Quarto',
+           Concat(S1.NomeSelecao,' ',J.GolsSelecao1,' x ',J.GolsSelecao2, ' ',S2.NomeSelecao) As Placar,
+		    Case When J.GolsSelecao1 > J.GolsSelecao2 Then Concat(S1.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then  ' Venceu' When 'PE' Then ' Venceu nos Penaltys' Else ' Venceu na Prorrogação' End) 
+             Else Concat(S2.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then  ' Venceu' When 'PE' Then ' Venceu nos Penaltys' Else ' Venceu na Prorrogação' End) End As 'Terceiro Lugar',
+   		    Case When J.GolsSelecao2 > J.GolsSelecao1 Then Concat(S1.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then  ' Perdeu' When 'PE' Then ' Perdeu nos Penaltys' Else ' Perdeu na Prorrogação' End) 
+             Else Concat(S2.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then  ' Perdeu' When 'PE' Then ' Perdeu nos Penaltys' Else ' Perdeu na Prorrogação' End) End As 'Quarto Lugar'
+From Jogos J Inner Join Grupos G
+                      On J.CodigoGrupoSorteio = G.CodigoGrupo
+                     Inner Join Selecoes S1
+                      On J.CodigoSelecao1 = S1.CodigoSelecao
+                     Inner Join Selecoes S2
+                      On J.CodigoSelecao2 = S2.CodigoSelecao
 Where J.CodigoJogo = 63
+Order By J.CodigoJogo
+Go
 
-Union All
+WaitFor Delay '00:00:05'
+Go
 
-Select Case When J.GolsSelecao1 < J.GolsSelecao2 Then '4º lugar: '+S1.NomeSelecao Else '4º lugar: '+S2.NomeSelecao End As 'Classificação'
-From ClassificadosTerceiroLugar C Inner Join Selecoes S1
-                                           On C.CodigoSelecaoSorteio = S1.CodigoSelecao
-										  Inner Join Jogos J
-										   On J.CodigoSelecao1 = S1.CodigoSelecao
-										  Inner Join Selecoes S2
-										   On S2.CodigoSelecao = J.CodigoSelecao2
-Where J.CodigoJogo = 63
+-- Criando o Jogo da Final --
+Declare @CodigoSelecao1 TinyInt, @CodigoSelecao2 TinyInt
 
--- Apresentando - Classificação Final - Posicionamento - Seleções --
-Select 'Classificação Final - Posicionamento - Seleções' As 'Qatar 2022'
-Union All
-Select Case When J.GolsSelecao1 > J.GolsSelecao2 Then '1º lugar: '+S1.NomeSelecao Else '1º lugar: '+S2.NomeSelecao End As 'Classificação'
-From ClassificadosFinal C Inner Join Selecoes S1
-                                           On C.CodigoSelecaoSorteio = S1.CodigoSelecao
-										  Inner Join Jogos J
-										   On J.CodigoSelecao1 = S1.CodigoSelecao
-										  Inner Join Selecoes S2
-										   On S2.CodigoSelecao = J.CodigoSelecao2
+Set @CodigoSelecao1 = (Select CodigoSelecaoSorteio From ClassificadosFinal Where CodigoFinal = 1)
+Set @CodigoSelecao2 = (Select CodigoSelecaoSorteio From ClassificadosFinal Where CodigoFinal = 2)
+  
+Insert Into Jogos (CodigoGrupoSorteio, CodigoSelecao1, CodigoSelecao2, CodigoJogoNoGrupo, GolsSelecao1, GolsSelecao2, CartoesAmareloSelecao1, CartoesAmareloSelecao2, CartoesVermelhoSelecao1, CartoesVermelhoSelecao2)
+Values (1,@CodigoSelecao1,@CodigoSelecao2, 1, Rand()*Rand()*8,Rand()*Rand()*8,Rand()*10,Rand()*10,Rand()*4,Rand()*4)
+Go
+
+-- Eliminando a ocorrência de possível empate na Final --
+If (Select Count(CodigoJogo) From Jogos Where CodigoJogo = 64 And GolsSelecao1 = GolsSelecao2) =1
+Begin
+
+ Select 'Ocorreu empate no jogo' As 'Final',' ' As 'Placar'
+ Union All
+ Select Concat('Jogo nº ',J.CodigoJogo,' - ', 'Grupo ',G.SiglaGrupo, ' - ', S1.NomeSelecao,' x ',S2.NomeSelecao) As 'Final',
+            Concat(S1.NomeSelecao,' ',J.GolsSelecao1,' x ',J.GolsSelecao2, ' ',S2.NomeSelecao) As Placar
+ From Jogos J Inner Join Grupos G
+                       On J.CodigoGrupoSorteio = G.CodigoGrupo
+                      Inner Join Selecoes S1
+                       On J.CodigoSelecao1 = S1.CodigoSelecao
+                      Inner Join Selecoes S2
+                       On J.CodigoSelecao2 = S2.CodigoSelecao
+ Where J.CodigoJogo = 64
+
+ Select 'Prorrogação ou Penaltys serão realizados.' As 'Final'
+
+  Declare @GolsSelecao1 TinyInt, @GolsSelecao2 TinyInt, @StatusProrrogacaoOuPenaltys Char(2)
+
+  Set @GolsSelecao1 = Rand()*Rand()*8
+  Set @GolsSelecao2 = Rand()*Rand()*8
+
+  If (Select Round(Convert(Float,Rand()),2)) <0.6
+   Begin
+    Select 'A prorrogação está sendo realizada.' As 'Final - Prorrogação'
+     
+    Set @StatusProrrogacaoOuPenaltys = 'PR'
+   End
+   Else
+   Begin
+    Select 'Os penaltys estão sendo realizados.' As 'Final - Penaltys'
+
+    Set @StatusProrrogacaoOuPenaltys = 'PE'
+   End
+
+   If @GolsSelecao1 <> @GolsSelecao2
+    Begin
+
+     Update Jogos
+     Set GolsSelecao1 = J.GolsSelecao1+@GolsSelecao1,
+           GolsSelecao2 = J.GolsSelecao2+@GolsSelecao2,
+           ProrrogacaoOuPenaltys = @StatusProrrogacaoOuPenaltys
+     From Jogos J
+     Where CodigoJogo = 64
+ 
+   End
+  End
+Go
+
+-- Consultando o resultado do Jogo - Final --
+Select Concat('Jogo nº ',J.CodigoJogo,' - ', S1.NomeSelecao,' x ',S2.NomeSelecao) As 'Final',
+           Concat(S1.NomeSelecao,' ',J.GolsSelecao1,' x ',J.GolsSelecao2, ' ',S2.NomeSelecao) As Placar,
+		    Case When J.GolsSelecao1 > J.GolsSelecao2 Then Concat(S1.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then '' When 'PE' Then ' Venceu nos Penaltys' Else ' Venceu na Prorrogação' End) 
+             Else Concat(S2.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then '' When 'PE' Then ' Venceu nos Penaltys' Else ' Venceu na Prorrogação' End) End As 'Fifa World Champions',
+   		    Case When J.GolsSelecao2 > J.GolsSelecao1 Then Concat(S1.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then '' When 'PE' Then ' Perdeu nos Penaltys' Else ' Perdeu na Prorrogação' End) 
+             Else Concat(S2.NomeSelecao, Case J.ProrrogacaoOuPenaltys When '' Then '' When 'PE' Then ' Perdeu nos Penaltys' Else ' Perdeu na Prorrogação' End) End As 'Runner-up'	   
+From Jogos J Inner Join Grupos G
+                      On J.CodigoGrupoSorteio = G.CodigoGrupo
+                     Inner Join Selecoes S1
+                      On J.CodigoSelecao1 = S1.CodigoSelecao
+                     Inner Join Selecoes S2
+                      On J.CodigoSelecao2 = S2.CodigoSelecao
 Where J.CodigoJogo = 64
-
-Union All
-
-Select Case When J.GolsSelecao1 < J.GolsSelecao2 Then '2º lugar: '+S1.NomeSelecao Else '2º lugar: '+S2.NomeSelecao End As 'Classificação'
-From ClassificadosFinal C Inner Join Selecoes S1
-                                           On C.CodigoSelecaoSorteio = S1.CodigoSelecao
-										  Inner Join Jogos J
-										   On J.CodigoSelecao1 = S1.CodigoSelecao
-										  Inner Join Selecoes S2
-										   On S2.CodigoSelecao = J.CodigoSelecao2
-Where J.CodigoJogo = 64
-
-Union All
-
-Select Case When J.GolsSelecao1 > J.GolsSelecao2 Then '3º lugar: '+S1.NomeSelecao Else '3º lugar: '+S2.NomeSelecao End As 'Classificação'
-From ClassificadosTerceiroLugar C Inner Join Selecoes S1
-                                           On C.CodigoSelecaoSorteio = S1.CodigoSelecao
-										  Inner Join Jogos J
-										   On J.CodigoSelecao1 = S1.CodigoSelecao
-										  Inner Join Selecoes S2
-										   On S2.CodigoSelecao = J.CodigoSelecao2
-Where J.CodigoJogo = 63
-
-Union All
-
-Select Case When J.GolsSelecao1 < J.GolsSelecao2 Then '4º lugar: '+S1.NomeSelecao Else '4º lugar: '+S2.NomeSelecao End As 'Classificação'
-From ClassificadosTerceiroLugar C Inner Join Selecoes S1
-                                           On C.CodigoSelecaoSorteio = S1.CodigoSelecao
-										  Inner Join Jogos J
-										   On J.CodigoSelecao1 = S1.CodigoSelecao
-										  Inner Join Selecoes S2
-										   On S2.CodigoSelecao = J.CodigoSelecao2
-Where J.CodigoJogo = 63
-Union All
-
-Select Concat(Row_Number() Over (Order By PosicaoClassificacaoGeral Asc)+4,'º lugar: ', S.NomeSelecao) As 'Classificação'
-From ClassificacaoGeral C Inner Join Selecoes S
-										 On C.CodigoSelecao = S.CodigoSelecao 
-Where C.PosicaoClassificacaoGeral >=5
-
--- Apresentando - Classificação Final - Performance Geral - Seleções - Considerando todas as fases disputadas --
-Select 'Classificação Final - Performance Geral - Seleções - Considerando todas as fases disputadas' As 'Qatar 2022'
-Select Concat(Row_Number() Over (Order By Case PosicaoClassificacaoGeral When 2 Then Pontos - 3 Else Pontos End Desc, Jogos Desc, Vitorias Desc, Empates Desc, Derrotas Desc ),'º lugar: ', S.NomeSelecao) As 'Classificação',
-		   C.Jogos, C.Vitorias, C.Empates, C.Derrotas,
-		   C.GolsPro As 'Gols Pró', C.GolsContra As 'Gols Contra', C.SaldoGols As 'Saldo de Gols',
-		   C.CartoesAmarelos  As Amarelos, C.CartoesVermelhos As Vermelhos,
-		   Convert(Varchar(4),Ceiling((Convert(Numeric(2,0),C.Pontos)/21.00)*100))+'%' As '% de Pontos'
-From ClassificacaoGeral C Inner Join Selecoes S
-										 On C.CodigoSelecao = S.CodigoSelecao 
-
--- Apresentando - Classificação Geral - Desempenho ao longo da Copa do Mundo - Critérios - Pontos, Jogos, Vitórias, Empates --
-Select 'Classificação Geral - Desempenho ao longo da Copa do Mundo - Critérios - Pontos, Jogos, Vitórias, Empates, Derrotas...' As 'Qatar 2022'
-Select Concat(Row_Number() Over (Order By Pontos Desc, Jogos Desc, Vitorias Desc, Empates Desc, Derrotas Desc,
-                                                                          GolsPro Desc, GolsContra Desc, SaldoGols Desc, 
-											                              CartoesAmarelos Desc, CartoesVermelhos Desc),
-           'º lugar: ', S.NomeSelecao) As 'Classificação',
-		   C.Pontos,
-		   C.Jogos, C.Vitorias, C.Empates, C.Derrotas,
-		   C.GolsPro As 'Gols Pró', C.GolsContra As 'Gols Contra', C.SaldoGols As 'Saldo de Gols',
-		   C.CartoesAmarelos  As Amarelos, C.CartoesVermelhos As Vermelhos,
-		   Round(Percent_Rank() Over (Order By Case PosicaoClassificacaoGeral 
-																			When 1 Then (Pontos - 3) 
-																			When 2 Then (Pontos - 3) 
-																		  Else Pontos
-																		 End),2) As 'Ranking'
-From ClassificacaoGeral C Inner Join Selecoes S
-										 On C.CodigoSelecao = S.CodigoSelecao 
-Order By Pontos Desc
-End
 Go

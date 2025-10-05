@@ -1,4 +1,4 @@
-# 🏆 CopaDoMundoFeminina
+# 🏆 Copa do Mundo Feminina
 
 Simulador da Copa do Mundo de Futebol Feminino da FIFA 2023
 

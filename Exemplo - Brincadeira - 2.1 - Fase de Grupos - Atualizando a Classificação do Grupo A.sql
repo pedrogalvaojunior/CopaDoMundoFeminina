@@ -2,6 +2,7 @@
 Use Australia2023
 Go
 
+-- Criando a Stored Procedure --
 Create Or Alter Procedure P_ClassificacaoGrupoA
 As
 Begin

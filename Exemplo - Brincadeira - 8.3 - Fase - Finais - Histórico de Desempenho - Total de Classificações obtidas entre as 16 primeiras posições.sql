@@ -2,7 +2,7 @@
 Use Australia2023
 Go
 
-
+-- Criando a Stored Procedure P_AtualizarHistoricoEstatisticaDesempenho --
 Create Or Alter Procedure P_AtualizarHistoricoEstatisticaDesempenho
 As
 Begin

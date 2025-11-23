@@ -93,8 +93,6 @@ Após a criação do ambiente, siga a sequência de execução dos arquivos conf
 4. Correções nas condições de análise das fases de Quartas e Semi Final.  
 5. Redução do tempo médio de processamento para entre 0.05s e 0.07s.
 
----
-
 ### 📌 Versão 4.4 — Atualização entre 20/11/25 e 23/11/25
 1. Correção na formas de definição das seleções classificadas para a Fase Oitavas de Final.
 

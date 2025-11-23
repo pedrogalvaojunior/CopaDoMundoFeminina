@@ -87,7 +87,7 @@ End
 ;With ClassificacaoFinalGrupoE (ClassificacaoFinal, PosicaoGrupoSorteio, CodigoSelecaoSorteio)
 As
 (
-Select Row_Number() Over (Order By Pontos Desc, Vitorias Desc, Empates Desc, Derrotas Desc, GolsPro Desc, GolsContra Desc) As ClassificacaoFinal, 
+Select Row_Number() Over (Order By Pontos Desc, Vitorias Desc, Empates Desc, Derrotas Asc, GolsPro Desc, GolsContra Asc) As ClassificacaoFinal, 
            PosicaoGrupoSorteio, CodigoSelecaoSorteio
 From GrupoE)
 Update GrupoE

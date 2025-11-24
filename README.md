@@ -104,3 +104,7 @@ Após a criação do ambiente, siga a sequência de execução dos arquivos conf
 - Este simulador é ideal para fins didáticos, análises estatísticas e demonstrações de lógica de programação aplicada ao futebol.
 - Para melhor aproveitamento, siga rigorosamente a ordem de execução dos arquivos.
 - Para dúvidas ou sugestões, entre em contato com o mantenedor do projeto.
+
+👨‍💻 Autor
+Pedro Antonio Galvão Galvão Júnior - MVP Junior Galvão
+Projeto iniciado em Abril/2022 e atualizado para a Copa do Mundo de Futebol Masculino FIFA 2023.

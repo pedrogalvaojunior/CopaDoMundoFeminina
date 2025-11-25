@@ -106,5 +106,5 @@ Após a criação do ambiente, siga a sequência de execução dos arquivos conf
 - Para dúvidas ou sugestões, entre em contato com o mantenedor do projeto.
 
 👨‍💻 Autor
-Pedro Antonio Galvão Galvão Junior - MVP Junior Galvão.
-Projeto iniciado em Abril/2022 e atualizado para a Copa do Mundo de Futebol Masculino FIFA 2023.
+**Pedro Antonio Galvão Galvão Junior - MVP Junior Galvão.**  
+Projeto iniciado em Abril/2022 e atualizado para a Copa do Mundo de Futebol Feminino FIFA 2023.

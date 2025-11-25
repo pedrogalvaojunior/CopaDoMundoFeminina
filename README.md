@@ -1,4 +1,4 @@
-# 🏆 Copa do Mundo - Simulador da Copa do Mundo de Futebol Feminino 2023
+# 🏆 Simulador da Copa do Mundo de Futebol Feminino Fifa 2023
 ![Badge](https://img.shields.io/badge/SQL%20Server-Project-blue) ![Badge](https://img.shields.io/badge/Version-2025-green) ![Badge](https://img.shields.io/badge/Status-Stable-success)
 
 Simulador da Copa do Mundo de Futebol Feminino da FIFA 2023
